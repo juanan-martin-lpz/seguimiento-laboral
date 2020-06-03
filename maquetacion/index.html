@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+  <!--<![endif]-->
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Seguimiento Empleabilidad</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.css" />
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="#">upgrade your browser</a> to improve your experience.
+      </p>
+    <![endif]-->
+
+    <div class="columns   upper-column">   
+        <div class="column  is-two-thirds level">
+            <h1 class="title level-item">Seguimiento Empleabilidad</h1>
+        </div>
+
+        <div class="column">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a
+                    role="button"
+                    class="navbar-burger burger"
+                    aria-label="menu"
+                    aria-expanded="false"
+                    data-target="navbarMain"
+                    >
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    </a>
+                </div>
+
+                <div id="navbarMain" class="navbar-menu">
+                    <div class="navbar-start">
+                        <a class="navbar-item">
+                            Freelance
+                        </a>
+
+                        <a class="navbar-item">
+                            Empresa
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+
+    <div class="columns">
+        <div class="column level">
+            <h2 class="subtitle level-item">Freelance</h2>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                            Por Lenguaje
+                            </p>
+                        </header>    
+                        <div class="card-content">
+                            <div class="content">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Por Framework
+                            </p>
+                        </header>    
+                        <div class="card-content">                        
+                            <div class="content">   
+                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column level">
+            <h2 class="subtitle level-item">Empresa</h2>
+            <div class="columns">
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                            Por Lenguaje
+                            </p>
+                        </header>    
+                        <div class="card-content">
+                            <div class="content">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Por Framework
+                            </p>
+                        </header>    
+                        <div class="card-content">                        
+                            <div class="content">   
+                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Scripts para el menu movil -->
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Get all "navbar-burger" elements
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+          
+            // Check if there are any navbar burgers
+            if ($navbarBurgers.length > 0) {
+          
+              // Add a click event on each of them
+              $navbarBurgers.forEach( el => {
+                el.addEventListener('click', () => {
+          
+                  // Get the target from the "data-target" attribute
+                  const target = el.dataset.target;
+                  const $target = document.getElementById(target);
+          
+                  // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                  el.classList.toggle('is-active');
+                  $target.classList.toggle('is-active');
+          
+                });
+              });
+            }
+          
+          });
+    </script>
+  </body>
+</html>
