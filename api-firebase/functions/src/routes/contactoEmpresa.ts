@@ -14,13 +14,14 @@ router.get('/:empresa', async (req, res) => {
 
     const fl  = req.params.empresa;
 
-    const contactos = await db.collection('empresa').doc(fl).collection('contactos');
+    const contactos = await db.collection('empresa').doc(fl).collection('contactos').get();
+
 
     if (contactos) {
         return res.status(200).json({
             status: true,
             message: 'Contactos Empresa Recuperados correctamente',
-            contactos
+            contactos: contactos.docs.map(doc => doc.data())
         });
     }
     else {
@@ -59,14 +60,13 @@ router.post('/:empresa', async (req, res) => {
 });
 
 
-router.put('/:empresa/:id', async (req, res) => {
+router.put('/:empresa', async (req, res) => {
     
     const contacto = req.body;
 
-    const id = req.params.id;
     const fl = req.params.empresa;
 
-    const cont = await db.collection('empresa').doc(fl).collection('contactos').doc(id);
+    const cont = await db.collection('empresa').doc(fl).collection('contactos').doc(contacto.id);
        
     await cont.set(contacto).then( resp => {
         return res.status(200).json({
@@ -87,13 +87,13 @@ router.put('/:empresa/:id', async (req, res) => {
 });
 
 
-router.delete('/:empresa/:id', async (req, res) => {
+router.delete('/:empresa', async (req, res) => {
     
-    
-    const id = req.params.id;
+    const contacto = req.body;
+
     const fl = req.params.empresa;
 
-    await db.collection('empresa').doc(fl).collection('contactos').doc(id).delete().then( resp => {
+    await db.collection('empresa').doc(fl).collection('contactos').doc(contacto.id).delete().then( resp => {
         return res.status(200).json({
             status: true,
             message: 'Contacto de la Empresa eliminado correctamente',

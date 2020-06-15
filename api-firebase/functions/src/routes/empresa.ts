@@ -10,24 +10,12 @@ const db = admin.firestore();
 
 router.get('/', async (req, res, next) => {
    
-    const fl  = req.params.freelance;
+    const empresa = db.collection('empresa');
+    const docsSnapshot = await empresa.get();
 
-    const contactos = await db.collection('empresa').doc(fl).collection('contactos').get();
+    const empresas = docsSnapshot.docs.map(doc => doc.data()); 
+    res.json( empresas );    
 
-
-    if (contactos) {
-        return res.status(200).json({
-            status: true,
-            message: 'Contactos Empresa Recuperados correctamente',
-            contactos: contactos.docs.map(doc => doc.data())
-        });
-    }
-    else {
-        return res.status(400).json({
-            status: false,
-            message: 'Error al recuperar los contactos Empresa',
-        });
-    }
 });
 
 

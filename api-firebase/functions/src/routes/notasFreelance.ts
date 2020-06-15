@@ -2,8 +2,8 @@ import * as express from 'express';
 import * as admin from 'firebase-admin';
 
 
-import Freelance from '../models/freelance';
-import Nota from '../models/nota';
+// import Freelance from '../models/freelance';
+// import Nota from '../models/nota';
 
 
 

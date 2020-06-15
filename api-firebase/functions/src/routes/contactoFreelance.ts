@@ -2,8 +2,8 @@ import * as express from 'express';
 import * as admin from 'firebase-admin';
 
 
-import Freelance from '../models/freelance';
-import Contacto from '../models/contacto';
+//import Freelance from '../models/freelance';
+//import Contacto from '../models/contacto';
 
 
 
@@ -64,14 +64,13 @@ router.post('/:freelance', async (req, res) => {
 });
 
 
-router.put('/:freelance/:id', async (req, res) => {
+router.put('/:freelance', async (req, res) => {
     
     const contacto = req.body;
 
-    const id = req.params.id;
     const fl = req.params.freelance;
 
-    const cont = await db.collection('freelance').doc(fl).collection('contactos').doc(id);
+    const cont = await db.collection('freelance').doc(fl).collection('contactos').doc(contacto.id);
        
     await cont.set(contacto).then( resp => {
         return res.status(200).json({
@@ -92,13 +91,14 @@ router.put('/:freelance/:id', async (req, res) => {
 });
 
 
-router.delete('/:freelance/:id', async (req, res) => {
+router.delete('/:freelance', async (req, res) => {
     
-    
-    const id = req.params.id;
+   
+    const contacto = req.body;
+
     const fl = req.params.freelance;
 
-    await db.collection('freelance').doc(fl).collection('contactos').doc(id).delete().then( resp => {
+    await db.collection('freelance').doc(fl).collection('contactos').doc(contacto.id).delete().then( resp => {
         return res.status(200).json({
             status: true,
             message: 'Contacto del Freelance eliminado correctamente',

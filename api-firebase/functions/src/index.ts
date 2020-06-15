@@ -20,6 +20,11 @@ import * as freelanceRouter from './routes/freelance';
 import * as empresaRouter from './routes/empresa';
 import * as contactoFreelanceRouter from './routes/contactoFreelance';
 import * as contactoEmpresaRouter from './routes/contactoEmpresa';
+import * as notasEmpresaRouter from './routes/notasEmpresa';
+import * as notasFreelanceRouter from './routes/notasFreelance';
+
+import * as lenguajeRouter from './routes/lenguaje';
+import * as frameworkRouter from './routes/framework';
 
 const app = express();
 const main = express();
@@ -28,10 +33,14 @@ const main = express();
 // la ruta sera http://localhost:5000/seguimientolaboral-cf3fd/us-central/api/v1/empresa
 app.use('/freelance', freelanceRouter);
 app.use('/freelance/contactos', contactoFreelanceRouter);
-
+app.use('/freelance/notas', notasFreelanceRouter);
 
 app.use('/empresa', empresaRouter);
-app.use('/empresa/contactos', contactoFreelanceRouter);
+app.use('/empresa/contactos', contactoEmpresaRouter);
+app.use('/empresa/notas', notasEmpresaRouter);
+
+app.use('/lenguaje', lenguajeRouter);
+app.use('/framework', frameworkRouter);
 
 // En main configuramos el endpoint principal de Firebase
 // como si fuera nuestra app express.
