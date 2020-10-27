@@ -9,103 +9,132 @@ const router = express.Router();
 const db = admin.firestore();
 
 router.get('/', async (req, res, next) => {
-   
-    const empresa = db.collection('empresa');
-    const docsSnapshot = await empresa.get();
 
-    const empresas = docsSnapshot.docs.map(doc => doc.data()); 
-    res.json( empresas );    
+    db.collection('empresa')
+        .get()
+        .then(snapshot => {
 
+            const empresas = snapshot.docs.map(doc => doc.data());
+
+            res.json({
+                status: true,
+                empresas: empresas
+            })
+        })
+        .catch(() => {
+            res.status(400).json({
+                status: false,
+                message: 'Error al recuperar las Empresas',
+            });
+        });
 });
 
 
-router.post('/', async (req, res, next) => {
-   
-    const fl: Empresa = req.body;
+router.post('/', (req, res) => {
 
-    const empresa = db.collection('empresa');
-  
-    fl.id = uuidv4();
+    const newEmpresa: Empresa = new Empresa();
 
-    await empresa.doc(fl.id).set(fl).then( r => {
-        res.status(200).json({
-            status: true,
-            message: 'Insercion correcta con uid :' + fl.id,
-            empresa: fl
+    newEmpresa.nombre = req.body.nombre;
+
+    newEmpresa.createdAt = new Date();
+    newEmpresa.lastModified = new Date();
+
+    newEmpresa.contactoPrincipal = req.body.contactoPrincipal;
+    newEmpresa.notas = req.body.notas;
+    newEmpresa.ofertas = req.body.ofertas;
+    newEmpresa.seguimientos = req.body.seguimientos;
+    newEmpresa.contactosAdicionales = req.body.contactosAdicionales;
+
+    newEmpresa.id = uuidv4();
+
+    const em = JSON.parse(JSON.stringify(newEmpresa));
+
+    db.collection('empresa')
+        .doc(newEmpresa.id)
+        .set(em)
+        .then(() => {
+            res.status(200).json({
+                status: true,
+                message: 'Insercion correcta con uid: ' + newEmpresa.id,
+                empresa: em
+            });
+        })
+        .catch(() => {
+            res.status(400).json({
+                status: false,
+                message: 'Error al insertar Empresa',
+            });
         });
-    })
-    .catch( e => {
-        res.status(400).json({
-            status: false,
-            message: 'Error al insertar Empresa',
-            errors: e
-        });
-    })
-
 });
 
-router.put('/', async (req, res) => {
-   
-    const fl: Empresa = req.body;
-    const empresa = await db.collection('empresa').doc(fl.id);
-  
-    if (empresa) {
-        empresa.set(fl).then( r => {
-            console.log(r);
+router.put('/:id', (req, res) => {
 
+
+    const id = req.params.id;
+
+    const newEmpresa: Empresa = new Empresa();
+
+    newEmpresa.nombre = req.body.nombre;
+
+    newEmpresa.lastModified = new Date();
+
+    newEmpresa.contactoPrincipal = req.body.contactoPrincipal;
+    newEmpresa.notas = req.body.notas;
+    newEmpresa.ofertas = req.body.ofertas;
+    newEmpresa.seguimientos = req.body.seguimientos;
+    newEmpresa.contactosAdicionales = req.body.contactosAdicionales;
+
+    const em = JSON.parse(JSON.stringify(newEmpresa));
+
+
+    db.collection('empresa')
+        .doc(id)
+        .update(em)
+        .then(() => {
             res.status(200).json({
                 status: true,
                 message: 'Empresa actualizada correctamente',
-                empresa: fl
+                empresa: em
             });
         })
-        .catch ( e => {
+        .catch(() => {
             res.status(400).json({
                 status: false,
-                message: 'Error al actualizar al Empresa',
-                errors: e
+                message: 'No se encontro la Empresa para ser actualizado',
             });
         });
-    }
-    else {
-        res.status(400).json({
-            status: false,
-            message: 'No se encontro la Empresa para ser actualizado',
-        });        
-    }   
-
-    return res;
 });
 
-router.delete('/', async (req, res) => {
-   
-    const fl: Empresa = req.body;
-    const empresa = await db.collection('empresa').doc(fl.id);
-    
-    if (empresa) {
-        empresa.delete().then( r => {
-            res.status(200).json({
-                status: true,
-                message: 'Empresa eliminada correctamente',
-                empresa: fl
-            });
+router.delete('/:id', async (req, res) => {
+
+    const id = req.params.id;
+
+    db.collection('empresa')
+        .doc(id)
+        .get()
+        .then(snapshot => {
+            if (snapshot.exists) {
+                snapshot.ref.delete()
+                    .then(() => {
+                        res.status(200).json({
+                            status: true,
+                            message: 'Empresa eliminada correctamente',
+                        });
+                    });
+            }
+            else {
+                res.status(404).json({
+                    status: false,
+                    message: 'No se encontro la Empresa para eliminar',
+                });
+            }
         })
-        .catch( e => {
+        .catch(() => {
             res.status(400).json({
                 status: false,
-                message: 'Error al eliminar la Empresa',
-                errors: e
+                message: 'No se encontro la Empresa para eliminar',
             });
-        });    
-    }
-    else {
-        res.status(400).json({
-            status: false,
-            message: 'No se encontro la Empresa para eliminar',
         });
-    }
-    
-    return res;
 });
 
 
