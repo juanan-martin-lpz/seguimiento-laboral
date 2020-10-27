@@ -8,7 +8,7 @@ const router = express.Router();
 
 const db = admin.firestore();
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
 
     db.collection('empresa')
         .get()
@@ -38,6 +38,11 @@ router.post('/', (req, res) => {
 
     newEmpresa.createdAt = new Date();
     newEmpresa.lastModified = new Date();
+
+    newEmpresa.linkendin = req.body.linkedin;
+    newEmpresa.twitter = req.body.twitter;
+    newEmpresa.facebook = req.body.facebook;
+    newEmpresa.web = req.body.web;
 
     newEmpresa.contactoPrincipal = req.body.contactoPrincipal;
     newEmpresa.notas = req.body.notas;
@@ -77,6 +82,11 @@ router.put('/:id', (req, res) => {
     newEmpresa.nombre = req.body.nombre;
 
     newEmpresa.lastModified = new Date();
+
+    newEmpresa.linkendin = req.body.linkedin;
+    newEmpresa.twitter = req.body.twitter;
+    newEmpresa.facebook = req.body.facebook;
+    newEmpresa.web = req.body.web;
 
     newEmpresa.contactoPrincipal = req.body.contactoPrincipal;
     newEmpresa.notas = req.body.notas;

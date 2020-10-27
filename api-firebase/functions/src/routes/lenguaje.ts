@@ -8,101 +8,117 @@ const router = express.Router();
 
 const db = admin.firestore();
 
-
 router.get('/', async (req, res) => {
-    const lenguaje = db.collection('lenguaje');
-    const docsSnapshot = await lenguaje.get();
 
-    const lenguajes = docsSnapshot.docs.map(doc => doc.data()); 
-    res.json( lenguajes );    
+    db.collection('lenguaje')
+        .get()
+        .then(snapshot => {
 
+            const lenguajes = snapshot.docs.map(doc => doc.data());
+
+            res.json({
+                status: true,
+                lenguajes: lenguajes
+            })
+        })
+        .catch(() => {
+            res.status(400).json({
+                status: false,
+                message: 'Error al recuperar los Lenguajes',
+            });
+        });
 });
 
 router.post('/', async (req, res) => {
-    const fl: Lenguaje = req.body;
 
-    const lenguaje = db.collection('lenguaje');
-  
-    fl.id = uuidv4();
+    const newLenguaje: Lenguaje = new Lenguaje();
 
-    await lenguaje.doc(fl.id).set(fl).then( r => {
-        res.status(200).json({
-            status: true,
-            message: 'Insercion correcta con uid :' + fl.id,
-            lenguaje: fl
+    newLenguaje.nombre = req.body.nombre;
+
+
+    newLenguaje.id = uuidv4();
+
+    const ln = JSON.parse(JSON.stringify(newLenguaje));
+
+    db.collection('lenguaje')
+        .doc(newLenguaje.id)
+        .set(ln)
+        .then(() => {
+            res.status(200).json({
+                status: true,
+                message: 'Insercion correcta con uid: ' + newLenguaje.id,
+                lenguaje: ln
+            });
+        })
+        .catch(() => {
+            res.status(400).json({
+                status: false,
+                message: 'Error al insertar Lenguaje',
+            });
         });
-    })
-    .catch( e => {
-        res.status(400).json({
-            status: false,
-            message: 'Error al insertar Lenguaje',
-            errors: e
-        });
-    })
-
 });
 
-router.put('/', async (req, res) => {
+router.put('/:id', async (req, res) => {
 
-    const fl: Lenguaje = req.body;
-    const lenguaje = await db.collection('lenguaje').doc(fl.id);
+    const id = req.params.id;
 
-    if (lenguaje) {
-        lenguaje.set(fl).then( r => {
-            console.log(r);
+    const newLenguaje: Lenguaje = new Lenguaje();
 
+    newLenguaje.nombre = req.body.nombre;
+
+    const ln = JSON.parse(JSON.stringify(newLenguaje));
+
+
+    db.collection('lenguaje')
+        .doc(id)
+        .update(ln)
+        .then(() => {
             res.status(200).json({
                 status: true,
                 message: 'Lenguaje actualizado correctamente',
-                lenguaje: fl
+                framework: fr
             });
         })
-        .catch ( e => {
+        .catch(() => {
             res.status(400).json({
                 status: false,
-                message: 'Error al actualizar Lenguaje',
-                errors: e
+                message: 'No se encontro el Lenguaje para ser actualizado',
             });
         });
-    }
-    else {
-        res.status(400).json({
-            status: false,
-            message: 'No se encontro el Lenguaje para ser actualizado',
-        });
-    }        
-});   
-
-router.delete('/', async (req, res) => {
-
-    const fl: Lenguaje = req.body;
-    const lenguaje = await db.collection('lenguaje').doc(fl.id);
-
-    if (lenguaje) {
-        lenguaje.delete().then( r => {
-            res.status(200).json({
-                status: true,
-                message: 'Lenguaje eliminado correctamente',
-                empresa: fl
-            });
-        })
-        .catch( e => {
-            res.status(400).json({
-                status: false,
-                message: 'Error al eliminar el Lenguaje',
-                errors: e
-            });
-        });    
-    }
-    else {
-        res.status(400).json({
-            status: false,
-            message: 'No se encontro el Lenguaje para eliminar',
-        });
-    }
-
-    return res;
 });
+
+router.delete('/:id', async (req, res) => {
+
+    const id = req.params.id;
+
+    db.collection('lenguaje')
+        .doc(id)
+        .get()
+        .then(snapshot => {
+            if (snapshot.exists) {
+                snapshot.ref.delete()
+                    .then(() => {
+                        res.status(200).json({
+                            status: true,
+                            message: 'Lenguaje eliminado correctamente',
+                        });
+                    });
+            }
+            else {
+                res.status(404).json({
+                    status: false,
+                    message: 'No se encontro el Lenguaje para eliminar',
+                });
+            }
+        })
+        .catch(() => {
+            res.status(400).json({
+                status: false,
+                message: 'No se encontro el Lenguaje para eliminar',
+            });
+        });
+});
+
 
 
 export = router;

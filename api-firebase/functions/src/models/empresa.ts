@@ -14,6 +14,12 @@ export default class Empresa {
     createdAt: Date = new Date();
     lastModified: Date = new Date();
 
+    linkendin!: String;
+    twitter!: String;
+    facebook!: String;
+    web!: String;
+
+
     contactoPrincipal!: Contacto;
 
     notas: Nota[] = []; //{type: Schema.Types.ObjectId , ref: Nota, required: false},
